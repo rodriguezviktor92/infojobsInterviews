@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "InfojobsInterviews",
+  "description": "InfojobsInterviews",
+  "version": "1.0.0",
+  "icons": {
+    "128": "ico-favicon-ij.png"
+  },
+  "permissions": ["activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {},
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
+        "app.js"
+      ]
+    }
+  ]
+}
