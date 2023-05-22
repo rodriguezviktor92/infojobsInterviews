@@ -11,5 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "@webcomponents/custom-elements": "^1.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.41.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
   }
 }

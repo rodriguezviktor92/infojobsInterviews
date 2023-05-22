@@ -13,10 +13,13 @@
   "action": {},
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://*.infojobs.net/*"],
       "js": [
         "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
         "app.js"
+      ],
+      "css": [
+        "styles.css"
       ]
     }
   ]
