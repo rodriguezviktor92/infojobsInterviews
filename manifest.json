@@ -16,6 +16,7 @@
       "matches": ["https://*.infojobs.net/*"],
       "js": [
         "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
+        "interview-chat.js",
         "app.js"
       ],
       "css": [
