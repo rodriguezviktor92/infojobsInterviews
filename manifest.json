@@ -19,9 +19,8 @@
         "interview-chat.js",
         "app.js"
       ],
-      "css": [
-        "styles.css"
-      ]
+      "css": ["styles.css"]
     }
-  ]
+  ],
+  "host_permissions": ["http://localhost:3000/*"]
 }
