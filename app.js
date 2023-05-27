@@ -17,9 +17,14 @@ function toggleOverlay(overlayElement) {
   overlay.classList.add('overlay', 'display');
 
   const chat = document.createElement('interview-chat');
+
   overlay.prepend(chat);
 
   btnInterview.addEventListener('click', () => toggleOverlay(overlay));
+
+  btnInterview.addEventListener('click', () => {
+    chat.welcome();
+  });
 
   document.body.appendChild(overlay);
 })();
