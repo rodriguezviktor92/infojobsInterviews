@@ -65,17 +65,16 @@ const css = `
     }
 
     li {
-      background-color: rgb(218 184 75);
+      background-color: #DAB84B;
       backdrop-filter: blur(10px);
       border-radius: 10px;
       padding: 9px;
       max-width: 60%;
-      color: #000000;
-      font-weight: bold;
+      color: #ffffff;
     }
 
     .user-message {
-      background-color: rgb(132 178 158);
+      background-color: #84B29E;
       align-self: flex-end;
     }
     .user-message-input {
@@ -85,10 +84,15 @@ const css = `
       padding: 15px;
       border-radius: 5px;
       width: -webkit-fill-available;
+      font-size: 16px;
+      color: #ffffff;
     }
     .user-message-input::placeholder{
-      color: #000000;
+      color: #ffffff;
       opacity: 0.7;
+    }
+    .user-message-input:focus {
+      outline: none;
     }
     .input-footer {
       display: flex;
@@ -193,13 +197,13 @@ template.innerHTML += `
               <ul id="interview-chat-list"></ul>
             </header>
             <footer class="input-footer">
-              <input type="text" name="message" id="user-message" class="user-message-input" placeholder="Enter text" />
+              <input type="text" name="message" id="user-message" class="user-message-input" placeholder="Escribe tu respuesta aquí" />
               <button id="btn-send" class="user-message-btn">
               <svg height="20px" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
               viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
               <path d="M29.3,2.6c-0.3-0.2-0.7-0.3-1-0.2L3,11.7c-0.4,0.1-0.7,0.5-0.7,0.9c0,0.4,0.3,0.8,0.7,0.9l10.2,3.8l10-10
                 c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.8,9.8l6.6,10.6c0.2,0.3,0.5,0.5,0.8,0.5c0.1,0,0.1,0,0.2,0c0.4-0.1,0.7-0.4,0.8-0.7l6.2-25.2
-                C29.7,3.3,29.6,2.9,29.3,2.6z"/>
+                C29.7,3.3,29.6,2.9,29.3,2.6z" style="fill: rgb(255, 255, 255)"/>
               </svg>
               </button>
             </footer>
@@ -222,6 +226,7 @@ class interviewChat extends HTMLElement {
 
     boton.addEventListener('click', () => {
       this.sendUserMessage(userMessage.value);
+      userMessage.value = '';
     });
 
     const overlay = document.querySelector('.overlay');
@@ -246,8 +251,6 @@ class interviewChat extends HTMLElement {
       `http://localhost:3000/message/${this.conversation}`,
       newMessage
     ).then((data) => {
-      console.log(data);
-
       function isJSON(str) {
         try {
           return JSON.parse(str).pregunta;
@@ -261,6 +264,9 @@ class interviewChat extends HTMLElement {
   }
 
   addMessage(message, type = '') {
+    const chatContainer = this.shadowRoot.querySelector(
+      '.chat-interview-header'
+    );
     const ul = this.shadowRoot.querySelector('#interview-chat-list');
 
     const newMessage = document.createElement('li');
@@ -268,6 +274,7 @@ class interviewChat extends HTMLElement {
     newMessage.textContent = message;
 
     ul.appendChild(newMessage);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
   }
 
   async postData(url = '', data = {}) {
@@ -283,18 +290,24 @@ class interviewChat extends HTMLElement {
     return response.json();
   }
 
+  getCurrentOfferId () {
+    const currentOffer = window.location.href;
+    const regex = /of-i(\w+)/;
+    const match = currentOffer.match(regex);
+    const offerId = match[1];
+
+    return offerId;
+  }
+
   welcome() {
-    const description = {
-      description:
-        'Programador para desarrollo de aplicaciones informáticas enfocadas en el ámbito industrial, con conocimientos tanto de front end como de back end.    Se valorarán conocimientos y experiencia en:        · Angular / AngularJS    · Javascript    · HTML5    · HTML / CSS    · C#    · HTTP & REST    · jQuery    · LINQ    · SQL    · Bootstrap    · Node.js    · Lenguaje SASS    · Visual Studio    · SQL Server        Se requiere buena disposición para trabajo en equipo.    La actividad se realizará fundamentalmente con carácter presencial en nuestras instalaciones de Ourense, con disponibilidad para desplazarse dentro y fuera de España.        Se ofrece:    · Incorporación inmediata a un equipo de trabajo con amplia experiencia en desarrollo de aplicaciones informáticas para la industria    · Formación continua    · Estabilidad y buen ambiente labora',
+    const offerId = {
+      value: this.getCurrentOfferId(),
     };
 
-    this.postData('http://localhost:3000/message/new', description).then(
-      (data) => {
-        this.conversation = data.conversation;
-        this.addMessage(JSON.parse(data.message).pregunta);
-      }
-    );
+    this.postData('http://localhost:3000/message/new', offerId).then((data) => {
+      this.conversation = data.conversation;
+      this.addMessage(JSON.parse(data.message).pregunta);
+    });
 
     setTimeout(() => {
       this.addMessage(
