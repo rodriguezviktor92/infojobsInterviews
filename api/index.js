@@ -120,7 +120,7 @@ app.post('/message/:id', (req, res) => {
             conversation: conversation._id,
           },
         ];
-        if (lastMessage === 2) {
+        if (lastMessage === 4) {
           newMessages.push({
             role: ChatCompletionRequestMessageRoleEnum.System,
             content: 'realiza una ultima pregunta',
@@ -135,7 +135,7 @@ app.post('/message/:id', (req, res) => {
             })),
             req.body.message,
           ];
-          if (lastMessage === 2) {
+          if (lastMessage === 4) {
             chatInterview.push({
               role: ChatCompletionRequestMessageRoleEnum.System,
               content: 'realiza una ultima pregunta',
