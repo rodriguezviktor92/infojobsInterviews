@@ -107,6 +107,7 @@ const css = `
       align-items: center;
       background: none;
       border: 0;
+      color: white;
     }
     .chat-interview-header {
       height: 150px;
@@ -144,6 +145,9 @@ const css = `
       flex-basis: 450px;
       border-radius: 10px;
     }
+    .btn-disabled {
+      color: black
+    }
     </style>
 `;
 
@@ -164,14 +168,14 @@ template.innerHTML += `
               viewBox='0 0 32 32' style='enable-background:new 0 0 32 32;' xml:space='preserve'>
               <path d='M29.3,2.6c-0.3-0.2-0.7-0.3-1-0.2L3,11.7c-0.4,0.1-0.7,0.5-0.7,0.9c0,0.4,0.3,0.8,0.7,0.9l10.2,3.8l10-10
                 c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.8,9.8l6.6,10.6c0.2,0.3,0.5,0.5,0.8,0.5c0.1,0,0.1,0,0.2,0c0.4-0.1,0.7-0.4,0.8-0.7l6.2-25.2
-                C29.7,3.3,29.6,2.9,29.3,2.6z' style='fill: rgb(255, 255, 255)'/>
+                C29.7,3.3,29.6,2.9,29.3,2.6z' style='fill: currentColor'/>
               </svg>
               </button>
             </footer>
           </section>
           <section id='call' class='chat-call-container'>
             <div class='btn-call-container'>
-              <button class='btn' id='btn-stop-camera'>
+              <button class='btn btn-disabled' id='btn-stop-camera'>
                 <svg
                   height='20px'
                   id='Layer_1'
@@ -183,7 +187,7 @@ template.innerHTML += `
                     class='cls-1'
                     d='M125.83556,87.42125a3.48687,3.48687,0,0,1-3.43167,3.49294H108.05205L93.492,79.3813V89.70086A8.85548,8.85548,0,0,1,84.64306,98.562H11.01333a8.85548,8.85548,0,0,1-8.84889-8.86116V38.29907A8.85542,8.85542,0,0,1,11.01333,29.438H84.64306A8.85542,8.85542,0,0,1,93.492,38.29907v10.246l14.5969-11.45936h14.315a3.44713,3.44713,0,0,1,3.43167,3.41941Z'
                     id='id_101'
-                    style='fill: rgb(255, 255, 255)'
+                    style='fill: currentColor'
                   ></path>
                 </svg>
               </button>
@@ -237,6 +241,7 @@ class interviewChat extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.conversation = '';
     this.character = '';
+    this.camera = false;
   }
 
   connectedCallback() {
@@ -255,12 +260,11 @@ class interviewChat extends HTMLElement {
     const btnCall = instance.querySelector('.btn-call');
     const btnSpeak = instance.querySelector('#btn-speak');
     const btnStopCamera = instance.querySelector('#btn-stop-camera');
-    const video = instance.getElementById('vid');
 
     //prettier-ignore
     btnCall.addEventListener('click', () => overlay.classList.toggle('display'));
     btnSpeak.addEventListener('click', () => this.speak());
-    btnStopCamera.addEventListener('click', () => this.stopStreamedVideo(video));
+    btnStopCamera.addEventListener('click', () => this.handlerCamera());
 
     this.shadowRoot.appendChild(instance);
   }
@@ -372,6 +376,19 @@ class interviewChat extends HTMLElement {
       cache: 1
     });
 
+    this.startStreamedVideo();
+  }
+
+  handlerCamera() {
+    if (this.camera) {
+      const video = this.shadowRoot.getElementById('vid');
+      this.stopStreamedVideo(video);
+    } else {
+      this.startStreamedVideo();
+    }
+  }
+
+  startStreamedVideo() {
     const { mediaDevices } = navigator;
     const video = this.shadowRoot.getElementById('vid');
 
@@ -382,8 +399,10 @@ class interviewChat extends HTMLElement {
       .then((stream) => {
         // Changing the source of video to current stream.
         video.srcObject = stream;
+        this.togglerBtnCammera();
         video.addEventListener('loadedmetadata', () => {
           video.play();
+          this.camera = true;
         });
       })
       .catch((e) => console.log('video error: ', e));
@@ -395,9 +414,16 @@ class interviewChat extends HTMLElement {
 
     tracks.forEach((track) => {
       track.stop();
+      this.camera = false;
+      this.togglerBtnCammera();
     });
 
     videoElem.srcObject = null;
+  }
+
+  togglerBtnCammera() {
+    const btnStopCamera = this.shadowRoot.getElementById('btn-stop-camera');
+    btnStopCamera.classList.toggle('btn-disabled');
   }
 }
 
