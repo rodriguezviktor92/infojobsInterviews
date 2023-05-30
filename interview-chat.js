@@ -273,7 +273,7 @@ class interviewChat extends HTMLElement {
     };
 
     this.postData(
-      `http://localhost:3000/message/${this.conversation}`,
+      `https://infojobs-interviews.vercel.app/message/${this.conversation}`,
       newMessage
     ).then((data) => {
       function isJSON(str) {
@@ -333,7 +333,7 @@ class interviewChat extends HTMLElement {
       value: this.getCurrentOfferId(),
     };
 
-    this.postData('http://localhost:3000/message/new', offerId).then((data) => {
+    this.postData('https://infojobs-interviews.vercel.app/message/new', offerId).then((data) => {
       this.conversation = data.conversation;
       this.addMessage(JSON.parse(data.message).pregunta);
     });
@@ -354,7 +354,7 @@ class interviewChat extends HTMLElement {
       width: 751,
       height: 601,
       // TODO: Replace this with your own endpoint on your own server. 
-      endpoint: 'http://localhost:3005/animate',
+      endpoint: 'https://charapi-production.up.railway.app/animate',
       // Character API parameters. TODO: If your api works without authentication, e.g. if your page is accessible without a login, then it is wise 
       // to *fix* or *limit* as many parameters as you can in your server code, including a background with a logo, if you can, 
       // in order to minimize the attractiveness of your endpoint for scammers. (CORS helps with this, but it can still be defeated.)

@@ -24,7 +24,7 @@
     }
   ],
   "host_permissions": [
-    "http://localhost:3000/*",
-    "https://api.infojobs.net/api/7/offer/*"
+    "https://api.infojobs.net/api/7/offer/*",
+    "https://charapi-production.up.railway.app/animate"
   ]
 }
