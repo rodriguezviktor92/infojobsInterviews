@@ -8,8 +8,8 @@ const css = `
       gap: 10px;
       padding: 0 10px;
       /* temporal */
-      /*background-image: url('https://i.ibb.co/80x03vT/descarga.png');*/
-      background-size: contain;
+      background-image: url('https://i.ibb.co/Lr23rMX/descarga.webp');
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
     }
