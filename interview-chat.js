@@ -348,9 +348,21 @@ class interviewChat extends HTMLElement {
   }
 
   getFeedback() {
-    this.postData(`https://infojobs-interviews.vercel.app/feedback/${this.conversation}`).then((data) => {
+    this.getData(`https://infojobs-interviews.vercel.app/feedback/${this.conversation}`).then((data) => {
       this.addMessage(JSON.parse(data.message).pregunta, 'assistant');
     });
+  }
+
+  async getData(url = '') {
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      referrerPolicy: 'no-referrer',
+    });
+    return response.json();
   }
 
   async postData(url = '', data = {}) {
