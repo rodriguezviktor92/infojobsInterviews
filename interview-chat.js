@@ -149,7 +149,8 @@ const css = `
       color: black;
     }
     .btn-speak {
-      display: none;
+      /*display: none;*/
+      position: absolute;
     }
     </style>
 `;
@@ -158,6 +159,7 @@ const template = document.createElement('template');
 template.innerHTML += `
     ${css}
     <div id='myDiv' style='width: 100vw;height: 100vh;position: absolute;display: flex;justify-content: center;align-items: end;'></div>
+      <button id='btn-preload' class='btn-speak'>preload</button>
       <button id='btn-speak' class='btn-speak'>Speak</button>
       <div class='container'>
           <section id='chat-interview' class='chat-interview-container'>
@@ -261,11 +263,14 @@ class interviewChat extends HTMLElement {
     });
 
     const btnCall = instance.querySelector('.btn-call');
+    const btnPreload = instance.querySelector('#btn-preload');
     const btnSpeak = instance.querySelector('#btn-speak');
+    
     const btnStopCamera = instance.querySelector('#btn-stop-camera');
 
     //prettier-ignore
     btnCall.addEventListener('click', () => this.handlerCloseChat());
+    btnPreload.addEventListener('click', () => this.preload());
     btnSpeak.addEventListener('click', () => this.speak());
     btnStopCamera.addEventListener('click', () => this.handlerCamera());
 
@@ -294,7 +299,7 @@ class interviewChat extends HTMLElement {
         }
       }
       const menssage = isJSON(data.message);
-      this.addMessage(menssage);
+      this.addMessage(menssage, 'assistant');
     });
   }
 
@@ -310,6 +315,7 @@ class interviewChat extends HTMLElement {
 
     ul.appendChild(newMessage);
     chatContainer.scrollTop = chatContainer.scrollHeight;
+    if (type === 'assistant') this.character.dynamicPlay({ say: message });
   }
 
   async postData(url = '', data = {}) {
@@ -334,6 +340,9 @@ class interviewChat extends HTMLElement {
     return offerId;
   }
 
+  preload() {
+  }
+
   speak() {
     this.character.dynamicPlay({ say: 'Esto es una prueba de audio' });
   }
@@ -354,29 +363,30 @@ class interviewChat extends HTMLElement {
     if (!this.chatActive) this.welcome();
   }
 
-  welcome() {
-    this.chatActive = true;
-
+  welcomeMessage() {
     const offerId = {
       value: this.getCurrentOfferId(),
     };
 
     this.postData('https://infojobs-interviews.vercel.app/message/new', offerId).then((data) => {
       this.conversation = data.conversation;
-      this.addMessage(JSON.parse(data.message).pregunta);
+      this.addMessage(JSON.parse(data.message).pregunta, 'assistant');
     });
 
     setTimeout(() => {
-      this.addMessage(
-        'Hola te ayudare a practicar para una entrevista de trabajo relacionada con este oferta.'
-      );
+      this.addMessage('¡Hola! Te ayudaré a practicar para una entrevista de trabajo relacionada con esta oferta.', 'assistant');
     }, 1000);
 
     setTimeout(() => {
-      this.addMessage(
-        'Estoy analizando la descripcion y redactando las 5 preguntas mas comunes...'
-      );
+      this.addMessage('Estoy analizando la descripción y redactando las 5 preguntas más comunes...', 'assistant');
     }, 2000);
+  }
+
+  welcome() {
+    this.shadowRoot.getElementById('myDiv')
+      .addEventListener('characterLoaded', () => this.welcomeMessage());
+
+    this.chatActive = true;
 
     this.character = CharApiClient.setupDiv('myDiv', {
       width: 751,
