@@ -24,6 +24,7 @@
   ],
   "host_permissions": [
     "https://api.infojobs.net/api/7/offer/*",
-    "https://charapi-production.up.railway.app/animate"
+    "https://charapi-production.up.railway.app/animate",
+    "https://infojobs-interviews.vercel.app/message/*"
   ]
 }

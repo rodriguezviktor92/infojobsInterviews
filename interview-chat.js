@@ -248,6 +248,7 @@ class interviewChat extends HTMLElement {
     this.character = '';
     this.camera = false;
     this.chatActive = false;
+    this.disabledBtn = false;
   }
 
   connectedCallback() {
@@ -278,29 +279,30 @@ class interviewChat extends HTMLElement {
   }
 
   sendUserMessage(userMessage) {
-    this.addMessage(userMessage, 'user');
-
-    const newMessage = {
-      message: {
-        role: 'user',
-        content: userMessage,
-      },
-    };
-
-    this.postData(
-      `https://infojobs-interviews.vercel.app/message/${this.conversation}`,
-      newMessage
-    ).then((data) => {
-      function isJSON(str) {
-        try {
-          return JSON.parse(str).pregunta;
-        } catch (e) {
-          return str;
+    if (!this.disabledBtn) {
+      this.addMessage(userMessage, 'user');
+      const newMessage = {
+        message: {
+          role: 'user',
+          content: userMessage,
+        },
+      };
+      this.postData(
+        `https://infojobs-interviews.vercel.app/message/${this.conversation}`,
+        newMessage
+      ).then((data) => {
+        function isJSON(str) {
+          try {
+            return { lastQuestion: false, value: JSON.parse(str).pregunta };
+          } catch (e) {
+            return { lastQuestion: true, value: str };
+          }
         }
-      }
-      const menssage = isJSON(data.message);
-      this.addMessage(menssage, 'assistant');
-    });
+        const message = isJSON(data.message);
+        this.addMessage(message.value, 'assistant');
+        if (message.lastQuestion) this.feedback();
+      });
+    }
   }
 
   addMessage(message, type = '') {
@@ -315,7 +317,28 @@ class interviewChat extends HTMLElement {
 
     ul.appendChild(newMessage);
     chatContainer.scrollTop = chatContainer.scrollHeight;
-    if (type === 'assistant') this.character.dynamicPlay({ say: message });
+    // if (type === 'assistant') this.character.dynamicPlay({ say: message });
+  }
+
+  feedback() {
+    this.disabledBtn = true;
+
+    this.addMessage('¿Te gustaria recibir un feedback sobre esta simulacion de entrevista?', 'assistant');
+    const ul = this.shadowRoot.querySelector('#interview-chat-list');
+
+    const feedbackLink = document.createElement('a');
+    feedbackLink.textContent = 'Si dame un feedback sobre la entrevista.';
+    feedbackLink.classList.add('feedback-link');
+
+    ul.appendChild(feedbackLink);
+
+    feedbackLink.addEventListener('click', () => this.getFeedback());
+  }
+
+  getFeedback() {
+    this.postData(`https://infojobs-interviews.vercel.app/feedback/${this.conversation}`).then((data) => {
+      this.addMessage(JSON.parse(data.message).pregunta, 'assistant');
+    });
   }
 
   async postData(url = '', data = {}) {
@@ -343,8 +366,8 @@ class interviewChat extends HTMLElement {
   preload() {
   }
 
-  speak() {
-    this.character.dynamicPlay({ say: 'Esto es una prueba de audio' });
+  speak(message) {
+    this.character.dynamicPlay({ say: message });
   }
 
   handlerCloseChat() {
@@ -374,11 +397,15 @@ class interviewChat extends HTMLElement {
     });
 
     setTimeout(() => {
-      this.addMessage('¡Hola! Te ayudaré a practicar para una entrevista de trabajo relacionada con esta oferta.', 'assistant');
+      const message = '¡Hola! Te ayudaré a practicar para una entrevista de trabajo relacionada con esta oferta.';
+      this.speak(message);
+      this.addMessage(message, 'assistant');
     }, 1000);
 
     setTimeout(() => {
-      this.addMessage('Estoy analizando la descripción y redactando las 5 preguntas más comunes...', 'assistant');
+      const message = 'Estoy analizando la descripción y redactando las 5 preguntas más comunes...';
+      this.speak(message);
+      this.addMessage(message, 'assistant');
     }, 2000);
   }
 
