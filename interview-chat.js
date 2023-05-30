@@ -134,6 +134,9 @@ const css = `
       position: relative;
       display: flex;
       flex-basis: 450px;
+      background-image: url(https://filestore.community.support.microsoft.com/api/images/16b67ad7-b23b-48d4-bf33-f326adbf3ab6);
+      background-size: cover;
+      border-radius: 10px;
     }
     #vid{
       height: 232px;
