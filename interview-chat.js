@@ -3,12 +3,12 @@ const css = `
     <style>
     .container {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      align-items: end;
       height: 100vh;
+      gap: 10px;
+      padding-left: 10px;
       /* temporal */
-      background-image: url('https://i.ibb.co/80x03vT/descarga.png');
+      /*background-image: url('https://i.ibb.co/80x03vT/descarga.png');*/
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -26,7 +26,7 @@ const css = `
       display: flex;
       flex-direction: column;
       justify-content: end;
-      padding-bottom: 5px;
+      padding-bottom: 30px;
     }
     .icon-send:before {
       content: '\f1d8';
@@ -134,33 +134,51 @@ const css = `
 const template = document.createElement('template');
 template.innerHTML += `
     ${css}
-    <div class="container">
-          <section id="call" class="chat-call-container">
-            <div class="btn-call-container">
-              <button class="btn">
+    <div id='myDiv' style='width: 100vw;height: 100vh;position: absolute;display: flex;justify-content: center;align-items: end;'></div>
+      <button id='btn-speak' class='user-message-btn'>Speak</button>
+      <div class='container'>
+          <section id='chat-interview' class='chat-interview-container'>
+            <header class='chat-interview-header'>
+              <ul id='interview-chat-list'></ul>
+            </header>
+            <footer class='input-footer'>
+              <input type='text' name='message' id='user-message' class='user-message-input' placeholder='Escribe tu respuesta aquí' />
+              <button id='btn-send' class='user-message-btn'>
+              <svg height='20px' version='1.1' id='Icons' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'
+              viewBox='0 0 32 32' style='enable-background:new 0 0 32 32;' xml:space='preserve'>
+              <path d='M29.3,2.6c-0.3-0.2-0.7-0.3-1-0.2L3,11.7c-0.4,0.1-0.7,0.5-0.7,0.9c0,0.4,0.3,0.8,0.7,0.9l10.2,3.8l10-10
+                c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.8,9.8l6.6,10.6c0.2,0.3,0.5,0.5,0.8,0.5c0.1,0,0.1,0,0.2,0c0.4-0.1,0.7-0.4,0.8-0.7l6.2-25.2
+                C29.7,3.3,29.6,2.9,29.3,2.6z' style='fill: rgb(255, 255, 255)'/>
+              </svg>
+              </button>
+            </footer>
+          </section>
+          <section id='call' class='chat-call-container'>
+            <div class='btn-call-container'>
+              <button class='btn'>
                 <svg
-                  height="20px"
-                  id="Layer_1"
-                  data-name="Layer 1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 128 128"
+                  height='20px'
+                  id='Layer_1'
+                  data-name='Layer 1'
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 128 128'
                 >
                   <path
-                    class="cls-1"
-                    d="M125.83556,87.42125a3.48687,3.48687,0,0,1-3.43167,3.49294H108.05205L93.492,79.3813V89.70086A8.85548,8.85548,0,0,1,84.64306,98.562H11.01333a8.85548,8.85548,0,0,1-8.84889-8.86116V38.29907A8.85542,8.85542,0,0,1,11.01333,29.438H84.64306A8.85542,8.85542,0,0,1,93.492,38.29907v10.246l14.5969-11.45936h14.315a3.44713,3.44713,0,0,1,3.43167,3.41941Z"
-                    id="id_101"
-                    style="fill: rgb(255, 255, 255)"
+                    class='cls-1'
+                    d='M125.83556,87.42125a3.48687,3.48687,0,0,1-3.43167,3.49294H108.05205L93.492,79.3813V89.70086A8.85548,8.85548,0,0,1,84.64306,98.562H11.01333a8.85548,8.85548,0,0,1-8.84889-8.86116V38.29907A8.85542,8.85542,0,0,1,11.01333,29.438H84.64306A8.85542,8.85542,0,0,1,93.492,38.29907v10.246l14.5969-11.45936h14.315a3.44713,3.44713,0,0,1,3.43167,3.41941Z'
+                    id='id_101'
+                    style='fill: rgb(255, 255, 255)'
                   ></path>
                 </svg>
               </button>
-                <button class="btn">
-                <svg height="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="475.085px" height="475.085px" viewBox="0 0 475.085 475.085" style="enable-background:new 0 0 475.085 475.085;" xml:space="preserve">
+                <button class='btn'>
+                <svg height='20px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='475.085px' height='475.085px' viewBox='0 0 475.085 475.085' style='enable-background:new 0 0 475.085 475.085;' xml:space='preserve'>
                 <g>
-                  <path d="M237.541,328.897c25.128,0,46.632-8.946,64.523-26.83c17.888-17.884,26.833-39.399,26.833-64.525V91.365
+                  <path d='M237.541,328.897c25.128,0,46.632-8.946,64.523-26.83c17.888-17.884,26.833-39.399,26.833-64.525V91.365
                     c0-25.126-8.938-46.632-26.833-64.525C284.173,8.951,262.669,0,237.541,0c-25.125,0-46.632,8.951-64.524,26.84
                     c-17.893,17.89-26.838,39.399-26.838,64.525v146.177c0,25.125,8.949,46.641,26.838,64.525
-                    C190.906,319.951,212.416,328.897,237.541,328.897z" id="id_101" style="fill: rgb(255, 255, 255);"></path>
-                  <path d="M396.563,188.15c-3.606-3.617-7.898-5.426-12.847-5.426c-4.944,0-9.226,1.809-12.847,5.426
+                    C190.906,319.951,212.416,328.897,237.541,328.897z' id='id_101' style='fill: rgb(255, 255, 255);'></path>
+                  <path d='M396.563,188.15c-3.606-3.617-7.898-5.426-12.847-5.426c-4.944,0-9.226,1.809-12.847,5.426
                     c-3.613,3.616-5.421,7.898-5.421,12.845v36.547c0,35.214-12.518,65.333-37.548,90.362c-25.022,25.03-55.145,37.545-90.36,37.545
                     c-35.214,0-65.334-12.515-90.365-37.545c-25.028-25.022-37.541-55.147-37.541-90.362v-36.547c0-4.947-1.809-9.229-5.424-12.845
                     c-3.617-3.617-7.895-5.426-12.847-5.426c-4.952,0-9.235,1.809-12.85,5.426c-3.618,3.616-5.426,7.898-5.426,12.845v36.547
@@ -169,44 +187,28 @@ template.innerHTML += `
                     c3.616,3.614,7.898,5.428,12.847,5.428h182.719c4.948,0,9.236-1.813,12.847-5.428c3.621-3.613,5.431-7.905,5.431-12.847
                     c0-4.948-1.81-9.232-5.431-12.847c-3.61-3.617-7.898-5.428-12.847-5.428h-73.08v-37.691
                     c41.299-4.565,75.985-22.408,104.061-53.526c28.076-31.117,42.12-67.711,42.12-109.776v-36.547
-                    C401.998,196.049,400.185,191.77,396.563,188.15z" id="id_102" style="fill: rgb(255, 255, 255);"></path>
+                    C401.998,196.049,400.185,191.77,396.563,188.15z' id='id_102' style='fill: rgb(255, 255, 255);'></path>
                 </g>
               </svg>
                 </button>
-              <button class="btn">
-                <svg height="20px" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+              <button class='btn'>
+                <svg height='20px' version='1.1' id='Icons' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 32 32' style='enable-background:new 0 0 32 32;' xml:space='preserve'>
                 <g>
-                  <path d="M20.4,2.9c-0.3-0.2-0.7-0.1-1,0.1L9.7,10H3c-0.6,0-1,0.4-1,1v10c0,0.6,0.4,1,1,1h6.7l9.7,7.1c0.2,0.1,0.4,0.2,0.6,0.2
-                    c0.2,0,0.3,0,0.5-0.1c0.3-0.2,0.5-0.5,0.5-0.9V3.8C21,3.4,20.8,3,20.4,2.9z" id="id_101" style="fill: rgb(255, 255, 255);"></path>
-                  <path d="M27.1,9.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4C27.2,12.1,28,14,28,16s-0.8,3.9-2.3,5.3c-0.4,0.4-0.4,1,0,1.4
-                    c0.2,0.2,0.5,0.3,0.7,0.3c0.2,0,0.5-0.1,0.7-0.3C29,20.9,30,18.6,30,16S29,11.1,27.1,9.3z" id="id_102" style="fill: rgb(255, 255, 255);"></path>
-                  <path d="M24.7,12.7c-0.4-0.4-1-0.4-1.4,0.1c-0.4,0.4-0.3,1,0.1,1.4c0.5,0.5,0.8,1.2,0.8,1.9s-0.3,1.4-0.8,1.9
-                    c-0.4,0.4-0.4,1-0.1,1.4c0.2,0.2,0.5,0.3,0.7,0.3c0.2,0,0.5-0.1,0.7-0.3c1-0.9,1.5-2.1,1.5-3.3S25.6,13.5,24.7,12.7z" id="id_103" style="fill: rgb(255, 255, 255);"></path>
+                  <path d='M20.4,2.9c-0.3-0.2-0.7-0.1-1,0.1L9.7,10H3c-0.6,0-1,0.4-1,1v10c0,0.6,0.4,1,1,1h6.7l9.7,7.1c0.2,0.1,0.4,0.2,0.6,0.2
+                    c0.2,0,0.3,0,0.5-0.1c0.3-0.2,0.5-0.5,0.5-0.9V3.8C21,3.4,20.8,3,20.4,2.9z' id='id_101' style='fill: rgb(255, 255, 255);'></path>
+                  <path d='M27.1,9.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4C27.2,12.1,28,14,28,16s-0.8,3.9-2.3,5.3c-0.4,0.4-0.4,1,0,1.4
+                    c0.2,0.2,0.5,0.3,0.7,0.3c0.2,0,0.5-0.1,0.7-0.3C29,20.9,30,18.6,30,16S29,11.1,27.1,9.3z' id='id_102' style='fill: rgb(255, 255, 255);'></path>
+                  <path d='M24.7,12.7c-0.4-0.4-1-0.4-1.4,0.1c-0.4,0.4-0.3,1,0.1,1.4c0.5,0.5,0.8,1.2,0.8,1.9s-0.3,1.4-0.8,1.9
+                    c-0.4,0.4-0.4,1-0.1,1.4c0.2,0.2,0.5,0.3,0.7,0.3c0.2,0,0.5-0.1,0.7-0.3c1-0.9,1.5-2.1,1.5-3.3S25.6,13.5,24.7,12.7z' id='id_103' style='fill: rgb(255, 255, 255);'></path>
                 </g>
                 </svg>
               </button>
-              <button class="btn btn-call">
-              <svg height="20px" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-                <path class="cls-1" d="M123.28788,96.79737,100.78819,80.34893a6.26082,6.26082,0,0,0-8.08382.58949l-12.02065,11.805-.04092.04092a5.33619,5.33619,0,0,1-7.50362-.08369L52.35966,71.92108,35.2994,54.86081a5.33619,5.33619,0,0,1-.08369-7.50362l.04092-.04092,11.805-12.02065a6.26082,6.26082,0,0,0,.58949-8.08382L31.20263,4.71212a6.26247,6.26247,0,0,0-9.48412-.73271l-8.47993,8.47993q-.80336.80336-1.5342,1.66808C10.14787,15.9666,6.77822,20.09128,5.49694,22.745a34.59493,34.59493,0,0,0,5.73882,38.17081l55.84846,55.84846a34.59493,34.59493,0,0,0,38.17081,5.73882c2.65369-1.28128,6.77836-4.65093,8.61754-6.20744q.86472-.73083,1.66808-1.5342l8.47993-8.47993A6.26247,6.26247,0,0,0,123.28788,96.79737Z" id="id_101" style="fill: rgb(255, 255, 255);"></path>
+              <button class='btn btn-call'>
+              <svg height='20px' id='Layer_1' data-name='Layer 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'>
+                <path class='cls-1' d='M123.28788,96.79737,100.78819,80.34893a6.26082,6.26082,0,0,0-8.08382.58949l-12.02065,11.805-.04092.04092a5.33619,5.33619,0,0,1-7.50362-.08369L52.35966,71.92108,35.2994,54.86081a5.33619,5.33619,0,0,1-.08369-7.50362l.04092-.04092,11.805-12.02065a6.26082,6.26082,0,0,0,.58949-8.08382L31.20263,4.71212a6.26247,6.26247,0,0,0-9.48412-.73271l-8.47993,8.47993q-.80336.80336-1.5342,1.66808C10.14787,15.9666,6.77822,20.09128,5.49694,22.745a34.59493,34.59493,0,0,0,5.73882,38.17081l55.84846,55.84846a34.59493,34.59493,0,0,0,38.17081,5.73882c2.65369-1.28128,6.77836-4.65093,8.61754-6.20744q.86472-.73083,1.66808-1.5342l8.47993-8.47993A6.26247,6.26247,0,0,0,123.28788,96.79737Z' id='id_101' style='fill: rgb(255, 255, 255);'></path>
               </svg>
               </button>
             </div>
-          </section>
-          <section id="chat-interview" class="chat-interview-container">
-            <header class="chat-interview-header">
-              <ul id="interview-chat-list"></ul>
-            </header>
-            <footer class="input-footer">
-              <input type="text" name="message" id="user-message" class="user-message-input" placeholder="Escribe tu respuesta aquí" />
-              <button id="btn-send" class="user-message-btn">
-              <svg height="20px" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-              viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
-              <path d="M29.3,2.6c-0.3-0.2-0.7-0.3-1-0.2L3,11.7c-0.4,0.1-0.7,0.5-0.7,0.9c0,0.4,0.3,0.8,0.7,0.9l10.2,3.8l10-10
-                c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.8,9.8l6.6,10.6c0.2,0.3,0.5,0.5,0.8,0.5c0.1,0,0.1,0,0.2,0c0.4-0.1,0.7-0.4,0.8-0.7l6.2-25.2
-                C29.7,3.3,29.6,2.9,29.3,2.6z" style="fill: rgb(255, 255, 255)"/>
-              </svg>
-              </button>
-            </footer>
           </section>
         </div>`;
 
@@ -215,6 +217,7 @@ class interviewChat extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this.conversation = '';
+    this.character = '';
   }
 
   connectedCallback() {
@@ -231,8 +234,11 @@ class interviewChat extends HTMLElement {
 
     const overlay = document.querySelector('.overlay');
     const btnCall = instance.querySelector('.btn-call');
+    const btnSpeak = instance.querySelector('#btn-speak');
+
     //prettier-ignore
     btnCall.addEventListener('click', () => overlay.classList.toggle('display'));
+    btnSpeak.addEventListener('click', () => this.speak());
 
     this.shadowRoot.appendChild(instance);
   }
@@ -299,6 +305,10 @@ class interviewChat extends HTMLElement {
     return offerId;
   }
 
+  speak() {
+    this.character.dynamicPlay({ say: 'Esto es una prueba de audio' });
+  }
+
   welcome() {
     const offerId = {
       value: this.getCurrentOfferId(),
@@ -320,6 +330,25 @@ class interviewChat extends HTMLElement {
         'Estoy analizando la descripcion y redactando las 5 preguntas mas comunes...'
       );
     }, 2000);
+
+    this.character = CharApiClient.setupDiv('myDiv', {
+      width: 751,
+      height: 601,
+      // TODO: Replace this with your own endpoint on your own server. 
+      endpoint: 'http://localhost:3005/animate',
+      // Character API parameters. TODO: If your api works without authentication, e.g. if your page is accessible without a login, then it is wise 
+      // to *fix* or *limit* as many parameters as you can in your server code, including a background with a logo, if you can, 
+      // in order to minimize the attractiveness of your endpoint for scammers. (CORS helps with this, but it can still be defeated.)
+      character: 'MichelleHead',
+      // Character version - get this from the character catalog
+      version: '1.5',
+      // Character idle pattern - get this from the character catalog
+      idleData: {'blink':['blink'],'normal':['idle1']},
+      // Increment the 'cache' value if you make changes to the parameters you fix in your server.
+      // Even if you delete your server-side cache, your clients may have images in their client cache. Incrementing the
+      // cache number in the client is a simple way to ensure that neither client or server-cached images are accidentally used.
+      cache: 1
+    });
   }
 }
 
