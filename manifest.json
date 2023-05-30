@@ -19,8 +19,7 @@
         "interview-chat.js",
         "app.js",
         "charapiclient.js"
-      ],
-      "css": ["styles.css"]
+      ]
     }
   ],
   "host_permissions": [
