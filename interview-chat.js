@@ -149,8 +149,18 @@ const css = `
       color: black;
     }
     .btn-speak {
-      /*display: none;*/
+      display: none;
       position: absolute;
+    }
+    .feedback-link {
+      background-color: rgb(98 98 98 / 50%);
+      backdrop-filter: blur(10px);
+      border: 0;
+      padding: 15px;
+      border-radius: 5px;
+      width: -webkit-fill-available;
+      font-size: 16px;
+      color: #ffffff;
     }
     </style>
 `;
