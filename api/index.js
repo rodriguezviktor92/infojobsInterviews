@@ -57,58 +57,58 @@ const INITIAL_MESSAGES = [
 
 app.post('/message/:id', (req, res) => {
   if (req.params.id === 'new') {
-    // new Conversation().save().then(async (conversation) => {
-    //   const offerId = req.body.value;
+    new Conversation().save().then(async (conversation) => {
+      const offerId = req.body.value;
 
-    //   const response = await fetch(
-    //     `https://api.infojobs.net/api/7/offer/${offerId}`,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: `Basic ${process.env.INFOJOBS_TOKEN}`,
-    //       },
-    //     }
-    //   );
-    //   const { description } = await response.json();
+      const response = await fetch(
+        `https://api.infojobs.net/api/7/offer/${offerId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${process.env.INFOJOBS_TOKEN}`,
+          },
+        }
+      );
+      const { description } = await response.json();
 
-    //   INITIAL_MESSAGES[0].content += description;
-    //   Message.insertMany([
-    //     ...INITIAL_MESSAGES.map((message) => ({
-    //       role: message.role,
-    //       content: message.content,
-    //       conversation: conversation._id,
-    //     })),
-    //   ]).then(() => {
-    //     console.log(INITIAL_MESSAGES);
-    //     openai
-    //       .createChatCompletion({
-    //         model: 'gpt-3.5-turbo',
-    //         messages: INITIAL_MESSAGES,
-    //       })
-    //       .then((data) => {
-    //         new Message({
-    //           role: 'assistant',
-    //           content: data.data.choices[0].message.content,
-    //           conversation: conversation._id,
-    //         })
-    //           .save()
-    //           .then(() => {
-    //             res.send({
-    //               message: data.data.choices[0].message.content,
-    //               conversation: conversation._id,
-    //             });
-    //           });
-    //       });
-    //   });
-    // });
-    // mock de respuesta
-    setTimeout(() => {
-      res.send({
-        message:
-          '{ "pregunta": "¿Tienes experiencia trabajando con Angular o AngularJS?",  "numeroDePregunta": 1 }',
-        conversation: '64719630cfab4e00b594d158',
+      INITIAL_MESSAGES[0].content += description;
+      Message.insertMany([
+        ...INITIAL_MESSAGES.map((message) => ({
+          role: message.role,
+          content: message.content,
+          conversation: conversation._id,
+        })),
+      ]).then(() => {
+        console.log(INITIAL_MESSAGES);
+        openai
+          .createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: INITIAL_MESSAGES,
+          })
+          .then((data) => {
+            new Message({
+              role: 'assistant',
+              content: data.data.choices[0].message.content,
+              conversation: conversation._id,
+            })
+              .save()
+              .then(() => {
+                res.send({
+                  message: data.data.choices[0].message.content,
+                  conversation: conversation._id,
+                });
+              });
+          });
       });
-    }, 3000);
+    });
+    // mock de respuesta
+    // setTimeout(() => {
+    //   res.send({
+    //     message:
+    //       '{ "pregunta": "¿Tienes experiencia trabajando con Angular o AngularJS? *esto es un mocks",  "numeroDePregunta": 1 }',
+    //     conversation: '64719630cfab4e00b594d158',
+    //   });
+    // }, 3000);
   } else {
     Conversation.findById(req.params.id).then((conversation) => {
       Message.find({ conversation: conversation._id }).then((messages) => {
