@@ -6,7 +6,7 @@ const css = `
       align-items: end;
       height: 100vh;
       gap: 10px;
-      padding-left: 10px;
+      padding: 0 10px;
       /* temporal */
       /*background-image: url('https://i.ibb.co/80x03vT/descarga.png');*/
       background-size: contain;
@@ -18,7 +18,7 @@ const css = `
       backdrop-filter: blur(10px);
       padding: 15px;
       border-radius: 8px 8px 0px 0px;
-      width: 40%;
+      flex-basis: 450px;
     }
     .chat-call-container {
       position: relative;
@@ -27,6 +27,8 @@ const css = `
       flex-direction: column;
       justify-content: end;
       padding-bottom: 30px;
+      align-items: center;
+      flex-grow: 1;
     }
     .icon-send:before {
       content: '\f1d8';
@@ -128,6 +130,17 @@ const css = `
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
       background-color: #555;
     }
+    .container-video {
+      position: relative;
+      display: flex;
+      flex-basis: 450px;
+    }
+    #vid{
+      height: 232px;
+      object-fit: cover;
+      flex-basis: 450px;
+      border-radius: 10px;
+    }
     </style>
 `;
 
@@ -135,7 +148,7 @@ const template = document.createElement('template');
 template.innerHTML += `
     ${css}
     <div id='myDiv' style='width: 100vw;height: 100vh;position: absolute;display: flex;justify-content: center;align-items: end;'></div>
-      <button id='btn-speak' class='user-message-btn'>Speak</button>
+      <button id='btn-speak' class=''>Speak</button>
       <div class='container'>
           <section id='chat-interview' class='chat-interview-container'>
             <header class='chat-interview-header'>
@@ -155,7 +168,7 @@ template.innerHTML += `
           </section>
           <section id='call' class='chat-call-container'>
             <div class='btn-call-container'>
-              <button class='btn'>
+              <button class='btn' id='btn-stop-camera'>
                 <svg
                   height='20px'
                   id='Layer_1'
@@ -210,6 +223,9 @@ template.innerHTML += `
               </button>
             </div>
           </section>
+          <div class='container-video'>
+              <video id="vid"></video>
+          </div>
         </div>`;
 
 class interviewChat extends HTMLElement {
@@ -235,10 +251,13 @@ class interviewChat extends HTMLElement {
     const overlay = document.querySelector('.overlay');
     const btnCall = instance.querySelector('.btn-call');
     const btnSpeak = instance.querySelector('#btn-speak');
+    const btnStopCamera = instance.querySelector('#btn-stop-camera');
+    const video = instance.getElementById('vid');
 
     //prettier-ignore
     btnCall.addEventListener('click', () => overlay.classList.toggle('display'));
     btnSpeak.addEventListener('click', () => this.speak());
+    btnStopCamera.addEventListener('click', () => this.stopStreamedVideo(video));
 
     this.shadowRoot.appendChild(instance);
   }
@@ -349,7 +368,35 @@ class interviewChat extends HTMLElement {
       // cache number in the client is a simple way to ensure that neither client or server-cached images are accidentally used.
       cache: 1
     });
+
+    const { mediaDevices } = navigator;
+    const video = this.shadowRoot.getElementById('vid');
+
+    mediaDevices
+      .getUserMedia({
+        video: true,
+      })
+      .then((stream) => {
+        // Changing the source of video to current stream.
+        video.srcObject = stream;
+        video.addEventListener('loadedmetadata', () => {
+          video.play();
+        });
+      })
+      .catch((e) => console.log('video error: ', e));
+  }
+
+  stopStreamedVideo(videoElem) {
+    const stream = videoElem.srcObject;
+    const tracks = stream.getTracks();
+
+    tracks.forEach((track) => {
+      track.stop();
+    });
+
+    videoElem.srcObject = null;
   }
 }
+
 
 window.customElements.define('interview-chat', interviewChat);
