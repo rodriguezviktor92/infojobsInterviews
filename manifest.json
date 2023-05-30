@@ -17,10 +17,14 @@
       "js": [
         "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
         "interview-chat.js",
-        "app.js"
+        "app.js",
+        "charapiclient.js"
       ],
       "css": ["styles.css"]
     }
   ],
-  "host_permissions": ["http://localhost:3000/*"]
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://api.infojobs.net/api/7/offer/*"
+  ]
 }
