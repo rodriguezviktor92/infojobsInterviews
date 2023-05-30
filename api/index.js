@@ -12,7 +12,11 @@ const mongoose = require('mongoose');
 const Message = require('./models/message');
 const Conversation = require('./models/conversation');
 
-require('dotenv').config();
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config();
+}
+
+const port = process.env.PORT || 3000;
 
 mongoose.connect(process.env.MONGO_URI);
 
@@ -172,6 +176,8 @@ app.get('/conversation/:id', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Server Started on port 3000');
+app.listen(port, () => {
+  console.log(`Server Started on port ${port}`);
 });
+
+module.exports = app;
