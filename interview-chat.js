@@ -146,7 +146,10 @@ const css = `
       border-radius: 10px;
     }
     .btn-disabled {
-      color: black
+      color: black;
+    }
+    .btn-speak {
+      display: none;
     }
     </style>
 `;
@@ -155,7 +158,7 @@ const template = document.createElement('template');
 template.innerHTML += `
     ${css}
     <div id='myDiv' style='width: 100vw;height: 100vh;position: absolute;display: flex;justify-content: center;align-items: end;'></div>
-      <button id='btn-speak' class=''>Speak</button>
+      <button id='btn-speak' class='btn-speak'>Speak</button>
       <div class='container'>
           <section id='chat-interview' class='chat-interview-container'>
             <header class='chat-interview-header'>
@@ -242,6 +245,7 @@ class interviewChat extends HTMLElement {
     this.conversation = '';
     this.character = '';
     this.camera = false;
+    this.chatActive = false;
   }
 
   connectedCallback() {
@@ -256,13 +260,12 @@ class interviewChat extends HTMLElement {
       userMessage.value = '';
     });
 
-    const overlay = document.querySelector('.overlay');
     const btnCall = instance.querySelector('.btn-call');
     const btnSpeak = instance.querySelector('#btn-speak');
     const btnStopCamera = instance.querySelector('#btn-stop-camera');
 
     //prettier-ignore
-    btnCall.addEventListener('click', () => overlay.classList.toggle('display'));
+    btnCall.addEventListener('click', () => this.handlerCloseChat());
     btnSpeak.addEventListener('click', () => this.speak());
     btnStopCamera.addEventListener('click', () => this.handlerCamera());
 
@@ -335,7 +338,25 @@ class interviewChat extends HTMLElement {
     this.character.dynamicPlay({ say: 'Esto es una prueba de audio' });
   }
 
+  handlerCloseChat() {
+    const video = this.shadowRoot.getElementById('vid');
+    this.stopStreamedVideo(video);
+    this.toggleOverlay();
+  }
+
+  toggleOverlay() {
+    const overlay = document.querySelector('.overlay');
+    overlay.classList.toggle('display');
+  }
+
+  handleInitChat() {
+    this.toggleOverlay();
+    if (!this.chatActive) this.welcome();
+  }
+
   welcome() {
+    this.chatActive = true;
+
     const offerId = {
       value: this.getCurrentOfferId(),
     };
@@ -410,15 +431,16 @@ class interviewChat extends HTMLElement {
 
   stopStreamedVideo(videoElem) {
     const stream = videoElem.srcObject;
-    const tracks = stream.getTracks();
+    if (stream) {
+      const tracks = stream.getTracks();
 
-    tracks.forEach((track) => {
-      track.stop();
+      tracks.forEach((track) => {
+        track.stop();
+      });
       this.camera = false;
       this.togglerBtnCammera();
-    });
-
-    videoElem.srcObject = null;
+      videoElem.srcObject = null;
+    }
   }
 
   togglerBtnCammera() {

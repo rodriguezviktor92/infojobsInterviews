@@ -1,7 +1,3 @@
-function toggleOverlay(overlayElement) {
-  overlayElement.classList.toggle('display');
-}
-
 (() => {
   const divContainer = document.querySelector('.hide-small-device.inner');
   const btnInterview = document.createElement('button');
@@ -20,10 +16,8 @@ function toggleOverlay(overlayElement) {
 
   overlay.prepend(chat);
 
-  btnInterview.addEventListener('click', () => toggleOverlay(overlay));
-
   btnInterview.addEventListener('click', () => {
-    chat.welcome();
+    chat.handleInitChat();
   });
 
   document.body.appendChild(overlay);
