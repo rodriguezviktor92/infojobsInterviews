@@ -349,7 +349,7 @@ class interviewChat extends HTMLElement {
 
   getFeedback() {
     this.getData(`https://infojobs-interviews.vercel.app/feedback/${this.conversation}`).then((data) => {
-      this.addMessage(JSON.parse(data.message).pregunta, 'assistant');
+      this.addMessage(data.message, 'assistant');
     });
   }
 
