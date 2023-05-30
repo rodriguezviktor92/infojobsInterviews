@@ -168,10 +168,47 @@ app.post('/message/:id', (req, res) => {
   }
 });
 
-app.get('/conversation/:id', (req, res) => {
+app.get('/feedback/:id', (req, res) => {
   Conversation.findById(req.params.id).then((conversation) => {
     Message.find({ conversation: conversation._id }).then((messages) => {
-      res.send(messages);
+      const newMessages = [
+        {
+          role: ChatCompletionRequestMessageRoleEnum.System,
+          content: 'Genera un feedback corto sobre como fue el desempeño y las respuestas del usuario en esta entrevista, se claro y directo.',
+          conversation: conversation._id,
+        },
+      ];
+      Message.insertMany(newMessages).then(() => {
+        const chatInterview = [
+          ...messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
+        ];
+        chatInterview.push({
+          role: ChatCompletionRequestMessageRoleEnum.System,
+          content: 'Genera un feedback corto sobre como fue el desempeño y las respuestas del usuario en esta entrevista, se claro y directo.',
+        });
+        openai
+          .createChatCompletion({
+            model: 'gpt-3.5-turbo',
+            messages: chatInterview,
+          })
+          .then((data) => {
+            new Message({
+              role: 'assistant',
+              content: data.data.choices[0].message.content,
+              conversation: conversation._id,
+            })
+              .save()
+              .then(() => {
+                res.send({
+                  message: data.data.choices[0].message.content,
+                  conversation: conversation._id,
+                });
+              });
+          });
+      });
     });
   });
 });
