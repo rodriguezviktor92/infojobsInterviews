@@ -161,6 +161,8 @@ const css = `
       width: -webkit-fill-available;
       font-size: 16px;
       color: #ffffff;
+      cursor: pointer;
+      background-color: #cb2f2f;
     }
     </style>
 `;
